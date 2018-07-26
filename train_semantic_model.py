@@ -6,6 +6,31 @@ import numpy as np
 import mygrad as mg
 
 def process_triples(training_triples, caption_embeddings, resnet_embeddings):
+    """ Performs preprocessing on input tuples to generate data compatible with a NN.
+
+    Parameters
+    ----------
+    training_triples : List[Tuple(int, int, int)]
+        List of all triples input to the neural network, in the form (caption_id, good_id, bad_id).
+
+    caption_embeddings : dict{int -> List, shape=(50,)}
+        Dictionary mapping caption ids to shape-(50,) embeddings.
+
+    resnet_embeddings : dict{int -> mygrad.Tensor, shape=(512,)}
+        Dictionary mapping image ids to shape-(512,) raw resnet embeddings.
+
+    Returns
+    -------
+    caption_desc : numpy.ndarray, shape=(N, 50)
+        2-dimensional array of correct caption embeddings
+
+    good_desc : numpy.ndarray, shape=(N, 512)
+        2-dimensional array of correct ("good") image descriptors
+
+    bad_desc : numpy.ndarray, shape=(N, 512)
+        2-dimensional array of incorrect ("bad") image descriptors
+    """
+
     caption_ids, good_img_ids, bad_img_ids = zip(*training_triples)
     N = len(caption_ids)
 
@@ -24,7 +49,20 @@ def process_triples(training_triples, caption_embeddings, resnet_embeddings):
     return caption_desc, good_desc, bad_desc
 
 
-def train(training_triples, margin=0.5):
+def train(training_triples, margin=0.5, epochs=10):
+    """ Trains a 512 by 50 linear classifier to fit given training data.
+    
+    Parameters
+    ----------
+    training_triples : List[Tuple(int, int, int)]
+        List of all triples input to the neural network, in the form (caption_id, good_id, bad_id).
+
+    margin : float, optional (default=0.5)
+        Margin to be used in margin-ranking loss.
+
+    epochs : int, optional (default=10)
+        Number of epochs to train neural network for.
+    """
 
     model = SemanticEmbeddingModel()
     optim = SGD(model.parameters, learning_rate=0.1)
@@ -33,7 +71,7 @@ def train(training_triples, margin=0.5):
 
     caption_desc, good_desc, bad_desc = process_triples(training_triples, caption_embeddings, resnet_embeddings)
 
-    for epoch_cnt in range(5):
+    for epoch_cnt in range(epochs):
         idxs = np.arange(len(caption_desc))
         np.random.shuffle(idxs)  
 
@@ -55,5 +93,3 @@ def train(training_triples, margin=0.5):
             loss.backward()
             optim.step()
             loss.null_gradients()
-
-resnet_embeddings = load_resnet_embeddings()
