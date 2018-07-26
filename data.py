@@ -51,5 +51,3 @@ def getCaptionIDs(image_id):
     img_indices = [i for i, x in enumerate(image_ids) if x == image_id]
     captions_IDs = [ids[j] for j in img_indices]
     return captions_IDs
-
-print(getCaptionIDs(318556))
