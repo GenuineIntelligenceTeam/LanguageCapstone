@@ -7,7 +7,7 @@ class SemanticEmbeddingModel(object):
     OUTPUT_SIZE = 50
 
     def __init__(self):
-        self.dense_layer = dense(INPUT_SIZE, OUTPUT_SIZE, weight_initializer=glorot_normal)
+        self.dense_layer = dense(self.INPUT_SIZE, self.OUTPUT_SIZE, weight_initializer=glorot_normal)
 
     def __call__(self, x):
         return self.dense_layer(x)
