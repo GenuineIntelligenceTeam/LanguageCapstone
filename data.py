@@ -28,7 +28,7 @@ def displayImages(image_id):
     img = Image.open('display.jpg')
     img.show()
 
-def getCaptions(image_id):
+def getCaptionIDs(image_id):
     """ provides all 5 captions for image associated with the given ID
 
 
@@ -39,8 +39,8 @@ def getCaptions(image_id):
 
     Returns
     -------
-    final_captions : list
-        list of all 5 captions of image
+    captions_IDs : list
+        list of all 5 caption IDs of image
     """
     image_ids, ids, captions = [], [], []
     for i in range(len(data['annotations'])):
@@ -49,6 +49,7 @@ def getCaptions(image_id):
         captions.append((data['annotations'][i])['caption'])
     caption_dict = dict(zip(ids, captions))
     img_indices = [i for i, x in enumerate(image_ids) if x == image_id]
-    final_ids = [ids[j] for j in img_indices]
-    final_captions = [caption_dict[k] for k in final_ids]
-    return final_captions
+    captions_IDs = [ids[j] for j in img_indices]
+    return captions_IDs
+
+print(getCaptionIDs(318556))
