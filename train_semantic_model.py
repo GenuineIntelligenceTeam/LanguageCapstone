@@ -36,6 +36,8 @@ def process_triples(training_triples, caption_embeddings, resnet_embeddings):
     caption_ids, good_img_ids, bad_img_ids = zip(*training_triples)
     N = len(caption_ids)
 
+
+
     caption_desc = caption_embeddings(caption_ids)
 
     good_desc = np.zeros((N, 512))
@@ -87,8 +89,11 @@ def train(training_triples, margin=0.5, epochs=10):
             batch_good_img = good_desc[i,:]
             batch_bad_img = bad_desc[i,:]
 
-            y_pred_good = mg.matmul(batch_caption, model(batch_good_img))
-            y_pred_bad =  mg.matmul(batch_caption, model(batch_bad_img))
+            y_good = model(batch_good_img)
+            y_bad = model(batch_bad_img)
+
+            y_pred_good = mg.matmul(batch_caption, y_good / mg.sqrt((y_good ** 2).sum()))
+            y_pred_bad =  mg.matmul(batch_caption, y_bad / mg.sqrt((y_bad ** 2).sum()))
 
             loss = margin_ranking_loss(y_pred_good, y_pred_bad, 1, margin=margin)
 
