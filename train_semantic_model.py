@@ -1,5 +1,7 @@
 from semantic_embedding_model import SemanticEmbeddingModel
 from load_resnet import load_resnet_embeddings
+from caption_embeddings import caption_to_word_embedding
+from data import generate_data
 from mygrad.nnet.losses import margin_ranking_loss
 from mynn.optimizers.sgd import SGD
 import numpy as np
@@ -34,9 +36,7 @@ def process_triples(training_triples, caption_embeddings, resnet_embeddings):
     caption_ids, good_img_ids, bad_img_ids = zip(*training_triples)
     N = len(caption_ids)
 
-    caption_desc = np.zeros((N, 50))
-    for i, caption_id in enumerate(caption_ids):
-        caption_desc[i,:] = caption_embeddings[caption_id]
+    caption_desc = caption_embeddings(caption_ids)
 
     good_desc = np.zeros((N, 512))
     for i, img_id in enumerate(good_img_ids):
@@ -69,7 +69,9 @@ def train(training_triples, margin=0.5, epochs=10):
 
     resnet_embeddings = load_resnet_embeddings()
 
-    caption_desc, good_desc, bad_desc = process_triples(training_triples, caption_embeddings, resnet_embeddings)
+    caption_desc, good_desc, bad_desc = process_triples(training_triples, caption_to_word_embedding, resnet_embeddings)
+
+    print("processed triples")
 
     for epoch_cnt in range(epochs):
         idxs = np.arange(len(caption_desc))
@@ -93,3 +95,5 @@ def train(training_triples, margin=0.5, epochs=10):
             loss.backward()
             optim.step()
             loss.null_gradients()
+
+train(generate_data(20, 5))

@@ -3,7 +3,7 @@ from PIL import Image
 import urllib.request
 import numpy as np
 
-with open('captions_train2014.json') as json_file:
+with open('data/captions_train2014.json') as json_file:
     data = json.load(json_file)
 
 
@@ -55,7 +55,7 @@ def getCaptionIDs(image_id):
     captions_IDs = [ids[j] for j in img_indices]
     return captions_IDs
 
-def generateData(n, k):
+def generate_data(n, k):
     """ generates dataset for training
 
 

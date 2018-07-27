@@ -7,7 +7,7 @@ import gensim
 from gensim.models.keyedvectors import KeyedVectors
 from sklearn.decomposition import TruncatedSVD
 import matplotlib.pyplot as plt
-path = "/Users/caseygoldstein/Downloads/glove.6B.50d.txt.w2v"
+path = "data/glove.6B.50d.txt.w2v"
 glove = KeyedVectors.load_word2vec_format(path, binary=False)
 import re, string
 from collections import Counter
@@ -64,7 +64,7 @@ punc_regex = re.compile('[{}]'.format(re.escape(string.punctuation)))
 
 
 
-with open("/Users/caseygoldstein/Week3_Student/bag_of_words/stopwords.txt", 'r') as r:
+with open("data/stopwords.txt", 'r') as r:
     stops = []
     for line in r:
         stops += [i.strip() for i in line.split('\t')]
