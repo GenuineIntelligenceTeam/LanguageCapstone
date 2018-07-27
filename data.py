@@ -72,12 +72,11 @@ def generateData(n, k):
         list of tuples (caption_id, good_img_id, bad_img_id) for training the neural network
     """
     triples, caption_id, bad_img_id = [], [], []
-    good_img_id = list(np.random.randint(0,len(image_ids),n))
+    good_img_id = np.random.choice(image_ids,n)
     for id in good_img_id:
         bad_img_id += list(np.random.choice(list(set(image_ids)-set(good_img_id)), k))
         for i in range(k):
-            caption_id.append(np.random.choice(getCaptionIDs(good_img_id)))
+            caption_id.append(np.random.choice(getCaptionIDs(id)))
     triples = list(zip(caption_id, good_img_id, bad_img_id))
-    return triples
 
-print(generateData(2,3))
+    return triples
