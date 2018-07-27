@@ -5,7 +5,7 @@ def similarity_finder(cap, k, database):
     Finds the top k similar images given a caption
     
     ####Parameters####
-    cap: Caption that user wants to find an image to
+    cap: Embedded caption that user wants to find an image to
     k: number of k images the function should find close to cap
     database: dictionary of image ids and descriptors
 
